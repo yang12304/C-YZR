@@ -58,7 +58,7 @@ public:
         shapes.push_back(s);
     }
 
-    void write(char filename[]){
+    void write(const string& filename){
         for (int i=0; i<shapes.size();i++) {
             vector<string> num ={"1","2","3","4","5","6","7","8"};
             double X = shapes[i]->getX();
@@ -66,7 +66,6 @@ public:
             double Z = shapes[i]->getZ();
             if(shapes[i]->getR()>0) {
                 string s1 = "cylinder_" + num[i] + "_";
-                //cout << s1;
                 ofstream out(s1+filename);
                 if(out.fail()){
                     cout<<"Open fail!";
@@ -77,9 +76,7 @@ public:
                 double R = shapes[i]->getR();
                 double H = shapes[i]->getH();
 
-
                 for(double j=0.0; j<=2.0*M_PI; j=j+deg){
-                    //cout<<deg<<' '<<j<<' '<<shapes[i]->getFacets()<<'\n';
                     //bottom
                     out << "  facet normal 0 0 -1" <<'\n';
                     out << "    outer loop" <<'\n';
@@ -112,22 +109,18 @@ public:
                     out << "      vertex " <<X+R*cos(j)<<' '<<Y+R*sin(j)<<' '<<Z+H<<'\n';                       //A'
                     out << "    endloop" <<'\n';
                     out << "  endfacet" <<'\n';
-                }
+                }//end for
                 out << "endsolid OpenSCAD_Model" <<'\n';
-
-
 
             }//end if2
             else {
                 double size = shapes[i]->getAll();
                 string s1 = "cube_" + num[i] + "_";
-                //cout << s1 << endl;
-
                 ofstream out(s1+filename);
                 if(out.fail()){
                     cout<<"Open fail!";
                     exit(1);
-                }
+                }//end if
                 //1
                 out << "solid OpenSCAD_Model" <<'\n';
                 out << "  facet normal -0 0 1" <<'\n';
@@ -227,10 +220,9 @@ public:
                 out << "  endfacet" <<'\n';
                 out << "endsolid OpenSCAD_Model" <<'\n';
                 out.close();
-            }
-
-        }
-    }
+            }//end else
+        }//emd outer for
+    }//end write
 };
 
 //https://www.stratasysdirect.com/resources/how-to-prepare-stl-files/
@@ -238,10 +230,9 @@ public:
 int main() {
 
     CAD c;
-    c.add(new Cube(0,0,0, 5));
-//    c.add(new Cube(100,100,3, 10));
+    c.add(new Cube(10,0,0, 5));
     c.add(new Cylinder(0,0,0, 10,10,10));
-    c.add(new Cylinder(100,0,0, 3,10,10));
+    c.add(new Cylinder(100,0,0, 3,10,100));
     c.write("test.stl");
 
 
